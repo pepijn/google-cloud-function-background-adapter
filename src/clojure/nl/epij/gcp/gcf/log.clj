@@ -1,7 +1,8 @@
 (ns nl.epij.gcp.gcf.log
   (:require [clojure.walk :as walk]
             [cheshire.core :as json]
-            [cheshire.generate :refer [add-encoder encode-str]])
+            [cheshire.generate :refer [add-encoder encode-str]]
+            [clojure.java.io :as io])
   (:import [org.slf4j LoggerFactory Logger]
            [net.logstash.logback.argument StructuredArguments]
            [com.fasterxml.jackson.core JsonGenerationException]
@@ -10,6 +11,12 @@
 (def ^Logger logger
   (LoggerFactory/getLogger ^String (.toString *ns*)))
 
+(def revision
+  (-> (io/resource "metadata.json")
+      (slurp)
+      (json/parse-string)
+      (get "revision")))
+
 (add-encoder HttpRequestImpl encode-str)
 (add-encoder HttpClientFacade encode-str)
 
@@ -17,7 +24,7 @@
   [level ^String message data]
   (let [data'                (-> (walk/stringify-keys data)
                                  (assoc "severity" level)
-                                 (assoc "revision" "TODO"))
+                                 (assoc "revision" revision))
         structured-arguments (mapcat (fn [[k v]]
                                        (cond (nil? v)
                                              []

@@ -1,4 +1,4 @@
-(defproject nl.epij/google-cloud-function-background-adapter "0.1.0-alpha1"
+(defproject nl.epij/google-cloud-function-background-adapter "0.1.0-alpha2"
   :description "A Clojure adapter for background functions on GCP's Cloud Function Java Runtime"
   :url "https://github.com/pepijn/google-cloud-function-background-adapter"
   :license {:name "MIT"
